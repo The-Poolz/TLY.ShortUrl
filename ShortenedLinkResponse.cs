@@ -1,15 +1,36 @@
-﻿namespace TLY.ShortUrl;
+﻿using System.Text.Json.Serialization;
+
+namespace TLY.ShortUrl;
 
 public class ShortenedLinkResponse
 {
-    public string short_url { get; set; }
-    public string description { get; set; }
-    public string long_url { get; set; }
-    public string domain { get; set; }
-    public string short_id { get; set; }
-    public int? expire_at_views { get; set; }
-    public DateTime? expire_at_datetime { get; set; }
-    public bool public_stats { get; set; }
-    public DateTime created_at { get; set; }
-    public DateTime updated_at { get; set; }
+    [JsonPropertyName("short_url")]
+    public string ShortUrl { get; set; } = null!;
+
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+
+    [JsonPropertyName("long_url")]
+    public string LongUrl { get; set; } = null!;
+
+    [JsonPropertyName("domain")]
+    public string? Domain { get; set; }
+
+    [JsonPropertyName("short_id")]
+    public string ShortId { get; set; } = null!;
+
+    [JsonPropertyName("expire_at_views")]
+    public int? ExpireAtViews { get; set; }
+
+    [JsonPropertyName("expire_at_datetime")]
+    public DateTime? ExpireAtDatetime { get; set; }
+
+    [JsonPropertyName("public_stats")]
+    public bool PublicStats { get; set; }
+
+    [JsonPropertyName("created_at")]
+    public DateTime CreatedAt { get; set; }
+
+    [JsonPropertyName("updated_at")]
+    public DateTime UpdatedAt { get; set; }
 }
