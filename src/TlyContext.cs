@@ -6,7 +6,7 @@ namespace TLY.ShortUrl
     {
         private readonly string _apiKey;
 
-        public TlyContext(string apiKey) => this._apiKey = apiKey;
+        public TlyContext(string apiKey) => _apiKey = apiKey;
 
         public async Task<ShortenedLinkResponse> GetShortUrlAsync(string longUrl, string description, string domain = "https://t.ly", bool publicStats = true) =>
             await GetResponse(await GetFlurlResponse(longUrl, description, domain, publicStats));

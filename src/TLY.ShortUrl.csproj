@@ -15,6 +15,7 @@
     <Description>A .NET library for creating shortened URLs using the T.ly URL shortening service.</Description>
     <Authors>darkarki, Lomet</Authors>
     <Company>The-Poolz</Company>
+    <Version>1.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
