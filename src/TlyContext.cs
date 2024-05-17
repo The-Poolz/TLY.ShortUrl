@@ -8,11 +8,11 @@ namespace TLY.ShortUrl
 
         public TlyContext(string apiKey) => _apiKey = apiKey;
 
-        public async Task<ShortenedLinkResponse> GetShortUrlAsync(string longUrl, string description, string domain = "https://t.ly", bool publicStats = true) =>
+        public virtual async Task<ShortenedLinkResponse> GetShortUrlAsync(string longUrl, string description, string domain = "https://t.ly", bool publicStats = true) =>
             await GetResponse(await GetFlurlResponse(longUrl, description, domain, publicStats));
 
         public virtual Task<ShortenedLinkResponse> GetResponse(IFlurlResponse? response) =>
-            response == null ? throw new Exception() : response.GetJsonAsync<ShortenedLinkResponse>();
+            response == null ? throw new InvalidOperationException("Failed to receive a valid response from the external service.") : response.GetJsonAsync<ShortenedLinkResponse>();
 
         public virtual Task<IFlurlResponse?> GetFlurlResponse(string longUrl, string description, string domain, bool publicStats) =>
             "https://t.ly/api/v1/link/shorten"
