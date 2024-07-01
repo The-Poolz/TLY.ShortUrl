@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Flurl;
+using System;
 using Flurl.Http;
 using TLY.ShortUrl.Settings;
 using System.Threading.Tasks;
@@ -24,7 +25,9 @@ namespace TLY.ShortUrl
             string description
         )
         {
-            var flurlResponse = await GetRequestAsync(_endpointsUrls.ListShortLinks);
+            var flurlResponse = await GetRequestAsync(
+                url: _endpointsUrls.ListShortLinks.AppendQueryParam("search", description)
+            );
 
             return await ParseResponseAsync<ShortenedLinkResponse>(flurlResponse);
         }
