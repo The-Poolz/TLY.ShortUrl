@@ -3,6 +3,7 @@ using System;
 using Flurl.Http;
 using TLY.ShortUrl.Settings;
 using System.Threading.Tasks;
+using TLY.ShortUrl.Responses;
 
 namespace TLY.ShortUrl
 {
@@ -21,7 +22,7 @@ namespace TLY.ShortUrl
             _endpointsUrls = endpointsUrls;
         }
 
-        public async Task<ShortenedLinkResponse> SearchShortUrlAsync(
+        public async Task<SearchShortUrlResponse> SearchShortUrlAsync(
             string description
         )
         {
@@ -29,10 +30,10 @@ namespace TLY.ShortUrl
                 url: _endpointsUrls.ListShortLinks.AppendQueryParam("search", description)
             );
 
-            return await ParseResponseAsync<ShortenedLinkResponse>(flurlResponse);
+            return await ParseResponseAsync<SearchShortUrlResponse>(flurlResponse);
         }
 
-        public async Task<ShortenedLinkResponse> CreateShortUrlAsync(
+        public async Task<CreateShortUrlResponse> CreateShortUrlAsync(
             string longUrl,
             string description,
             string domain = "https://t.ly",
@@ -49,7 +50,7 @@ namespace TLY.ShortUrl
 
             var flurlResponse = await PostRequestAsync(_endpointsUrls.CreateShortLink, body);
 
-            return await ParseResponseAsync<ShortenedLinkResponse>(flurlResponse);
+            return await ParseResponseAsync<CreateShortUrlResponse>(flurlResponse);
         }
 
         private async Task<IFlurlResponse?> GetRequestAsync(string url)
