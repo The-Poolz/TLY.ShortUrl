@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Flurl;
+using System;
 using Flurl.Http;
 using TLY.ShortUrl.Settings;
 using System.Threading.Tasks;
-using Flurl;
 
 namespace TLY.ShortUrl
 {
