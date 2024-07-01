@@ -10,6 +10,6 @@ namespace TLY.ShortUrl.Responses
         public int CurrentPage { get; set; }
 
         [JsonPropertyName("data")]
-        public IEnumerable<SearchShortUrlResponse> Data { get; set; } = Enumerable.Empty<SearchShortUrlResponse>();
+        public IEnumerable<CreateShortUrlResponse> Data { get; set; } = Enumerable.Empty<CreateShortUrlResponse>();
     }
 }
