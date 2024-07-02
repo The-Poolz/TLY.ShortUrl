@@ -32,8 +32,8 @@ internal static class MockSearchShortUrl
                     ""email"": ""username@google.com"",
                     ""photo_url"": ""https://www.gravatar.com/avatar/123.jpg?s=200&d=mm"",
                     ""current_team_id"": 123,
-                    ""created_at"": ""2024-04-28T08:41:46.000000Z"",
-                    ""updated_at"": ""2024-07-01T09:20:02.000000Z""
+                    ""created_at"": ""2024-07-01T16:20:27.000000Z"",
+                    ""updated_at"": ""2024-07-01T16:20:27.000000Z""
                 },
                 ""qr_code"": null,
                 ""tags"": [],
@@ -42,9 +42,9 @@ internal static class MockSearchShortUrl
             {
                 ""description"": ""TEST DESCRIPTION #1"",
                 ""long_url"": ""https://www.google.com"",
-                ""short_url"": ""https://t.ly/XGxcx"",
+                ""short_url"": ""https://t.ly/vVRMv"",
                 ""domain"": ""https://t.ly/"",
-                ""short_id"": ""XGxcx"",
+                ""short_id"": ""vVRMv"",
                 ""user_id"": 123,
                 ""team_id"": 123,
                 ""domain_id"": null,
@@ -55,8 +55,8 @@ internal static class MockSearchShortUrl
                 ""meta"": {
                     ""smart_urls"": []
                 },
-                ""created_at"": ""2024-07-01T13:40:09.000000Z"",
-                ""updated_at"": ""2024-07-01T13:40:09.000000Z"",
+                ""created_at"": ""2024-07-01T16:20:27.000000Z"",
+                ""updated_at"": ""2024-07-01T16:20:27.000000Z"",
                 ""has_password"": false,
                 ""short_stats"": null,
                 ""user"": {
@@ -65,8 +65,8 @@ internal static class MockSearchShortUrl
                     ""email"": ""username@google.com"",
                     ""photo_url"": ""https://www.gravatar.com/avatar/123.jpg?s=200&d=mm"",
                     ""current_team_id"": 123,
-                    ""created_at"": ""2024-04-28T08:41:46.000000Z"",
-                    ""updated_at"": ""2024-07-01T09:20:02.000000Z""
+                    ""created_at"": ""2024-07-01T16:20:27.000000Z"",
+                    ""updated_at"": ""2024-07-01T16:20:27.000000Z""
                 },
                 ""qr_code"": null,
                 ""tags"": [],
