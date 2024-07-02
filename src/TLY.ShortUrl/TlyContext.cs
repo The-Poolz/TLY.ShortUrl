@@ -53,13 +53,13 @@ namespace TLY.ShortUrl
             return await ParseResponseAsync<CreateShortUrlResponse>(flurlResponse);
         }
 
-        private async Task<IFlurlResponse?> GetRequestAsync(string url)
+        internal async Task<IFlurlResponse?> GetRequestAsync(string url)
         {
             return await RequestWithAuthorization(url)
                 .GetAsync();
         }
 
-        private async Task<IFlurlResponse?> PostRequestAsync(string url, object body)
+        internal async Task<IFlurlResponse?> PostRequestAsync(string url, object body)
         {
             return await RequestWithAuthorization(url)
                 .WithHeader("Content-Type", "application/json")
@@ -67,12 +67,12 @@ namespace TLY.ShortUrl
                 .PostJsonAsync(body);
         }
 
-        private IFlurlRequest RequestWithAuthorization(string url)
+        internal IFlurlRequest RequestWithAuthorization(string url)
         {
             return url.WithHeader("Authorization", $"Bearer {_apiKey}");
         }
 
-        private static async Task<TResponse> ParseResponseAsync<TResponse>(IFlurlResponse? flurlResponse)
+        internal static async Task<TResponse> ParseResponseAsync<TResponse>(IFlurlResponse? flurlResponse)
         {
             return flurlResponse == null
                 ? throw new InvalidOperationException("Failed to receive a valid response from the external service.")
