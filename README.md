@@ -16,46 +16,61 @@ dotnet add package TLY.ShortUrl
 
 ## Usage
 
-Here's how to use the library to shorten a URL:
+### Initialization
+
+To use the `TlyContext`, you need an API key from TLY. You can instantiate the `TlyContext` with the API key as shown below:
+
 ```csharp
 using TLY.ShortUrl;
 
-class Program
+string apiKey = "your_api_key_here";
+var context = new TlyContext(apiKey);
+```
+
+### Creating a Short URL
+
+You can create a short URL by calling the `CreateShortUrlAsync` method:
+
+```csharp
+var response = await context.CreateShortUrlAsync(
+    longUrl: "https://example.com",
+    description: "Example URL",
+    domain: "https://t.ly",
+    publicStats: true
+);
+
+Console.WriteLine($"Short URL: {response.ShortUrl}");
+```
+
+### Searching for Short URLs
+
+You can search for existing short URLs by description using the `SearchShortUrlAsync` method:
+
+```csharp
+var response = await context.SearchShortUrlAsync("Example URL");
+
+foreach (var shortUrl in response.Data)
 {
-    static async Task Main(string[] args)
-    {
-        string apiKey = "YOUR_API_KEY"; // Replace with your actual TLY API key.
-        var tlyContext = new TlyContext(apiKey);
-
-        string longUrl = "http://example.com/";
-        string description = "Social Media Link";
-
-        var shortenedLink = await tlyContext.GetShortUrlAsync(longUrl, description);
-        Console.WriteLine($"Shortened URL: {shortenedLink.short_url}");
-    }
+    Console.WriteLine($"Found Short URL: {shortUrl.ShortUrl}");
 }
 ```
 
-## Classes and Methods
+### Custom API Endpoints
 
-### `TlyContext`
+If you need to use custom API endpoints, you can implement the `IApiEndpoints` interface and pass it to the `TlyContext` constructor:
 
-- **`Task<ShortenedLinkResponse> GetShortUrlAsync(string longUrl, string description, string domain = "https://t.ly", bool publicStats = true)`**  
-  Initiates a request to shorten a URL and returns a `ShortenedLinkResponse` object containing details about the shortened URL.
+```csharp
+using TLY.ShortUrl.Settings;
 
-### `ShortenedLinkResponse`
+public class CustomApiEndpoints : IApiEndpoints
+{
+    public string CreateShortLink => "https://custom-api.t.ly/v1/link/shorten";
+    public string ListShortLinks => "https://custom-api.t.ly/v1/link/list";
+}
 
-- **Properties:**
-  - `string short_url` - The shortened URL.
-  - `string description` - A description of the shortened URL.
-  - `string long_url` - The original URL before shortening.
-  - `string domain` - The domain used for the shortened URL.
-  - `string short_id` - A unique identifier for the shortened URL.
-  - `int? expire_at_views` - The number of views after which the link will expire.
-  - `DateTime? expire_at_datetime` - The date and time when the link will expire.
-  - `bool public_stats` - Indicates whether the statistics of the shortened URL are public.
-  - `DateTime created_at` - The date and time when the shortened URL was created.
-  - `DateTime updated_at` - The date and time when the shortened URL was last updated.
+var customEndpoints = new CustomApiEndpoints();
+var context = new TlyContext(apiKey, customEndpoints);
+```
 
 
 ## Contributing
