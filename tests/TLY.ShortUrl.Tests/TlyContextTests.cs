@@ -15,6 +15,29 @@ public class TlyContextTests
     private static readonly TlyContext Context = new(ApiKey);
     private const string TestUrl = "https://api.example.com/test";
 
+    public class GetRequestAsync
+    {
+        [Fact]
+        internal async Task ShouldSetHeadersAndSendGetRequest_ShouldReturnValidResponse()
+        {
+            using var httpTest = new HttpTest();
+            httpTest.RespondWith("{ }");
+
+            var flurlResponse = await Context.GetRequestAsync(TestUrl);
+
+            httpTest.ShouldHaveMadeACall()
+                .WithUrlPattern(TestUrl)
+                .WithHeader("Authorization", $"Bearer {ApiKey}")
+                .WithVerb(HttpMethod.Get);
+
+            flurlResponse.Should().NotBeNull();
+            flurlResponse!.StatusCode.Should().Be((int)HttpStatusCode.OK);
+
+            var response = await flurlResponse.GetJsonAsync<JObject>();
+            response.Should().BeEquivalentTo(new JObject());
+        }
+    }
+
     public class PostRequestAsync
     {
         [Fact]
