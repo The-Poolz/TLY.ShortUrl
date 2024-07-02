@@ -10,11 +10,11 @@
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <IncludeSymbols>True</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageReleaseNotes>https://github.com/The-Poolz/TLY.ShortUrl/releases/tag/v1.0.2</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/The-Poolz/TLY.ShortUrl/releases/tag/v1.0.3</PackageReleaseNotes>
     <Description>A .NET library for creating shortened URLs using the T.ly URL shortening service.</Description>
     <Authors>darkarki, Lomet</Authors>
     <Company>The-Poolz</Company>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
