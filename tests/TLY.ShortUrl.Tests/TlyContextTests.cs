@@ -1,7 +1,9 @@
 ﻿using Flurl.Http;
 using System.Net;
 using FluentAssertions;
+using Flurl.Http.Testing;
 using System.Globalization;
+using Newtonsoft.Json.Linq;
 using TLY.ShortUrl.Responses;
 using TLY.ShortUrl.Tests.MockResponses;
 
@@ -9,6 +11,50 @@ namespace TLY.ShortUrl.Tests;
 
 public class TlyContextTests
 {
+    private const string ApiKey = "test_api_key";
+    private static readonly TlyContext Context = new(ApiKey);
+    private const string TestUrl = "https://api.example.com/test";
+
+    public class PostRequestAsync
+    {
+        [Fact]
+        internal async Task ShouldSetHeadersAndSendPostRequest_ShouldReturnValidResponse()
+        {
+            using var httpTest = new HttpTest();
+            httpTest.RespondWith("{ }");
+
+            var requestBody = new { key = "value" };
+
+            var flurlResponse = await Context.PostRequestAsync(TestUrl, requestBody);
+
+            httpTest.ShouldHaveMadeACall()
+                .WithUrlPattern(TestUrl)
+                .WithHeader("Authorization", $"Bearer {ApiKey}")
+                .WithHeader("Content-Type", "application/json")
+                .WithHeader("Accept", "application/json")
+                .WithVerb(HttpMethod.Post)
+                .WithRequestBody("{\"key\":\"value\"}");
+
+            flurlResponse.Should().NotBeNull();
+            flurlResponse!.StatusCode.Should().Be((int)HttpStatusCode.OK);
+
+            var response = await flurlResponse.GetJsonAsync<JObject>();
+            response.Should().BeEquivalentTo(new JObject());
+        }
+    }
+
+    public class RequestWithAuthorization
+    {
+        [Fact]
+        internal void ShouldSetAuthorizationHeader()
+        {
+            var flurlRequest = Context.RequestWithAuthorization(TestUrl);
+
+            flurlRequest.Headers.Should()
+                .ContainSingle(h => h.Name == "Authorization" && h.Value == $"Bearer {ApiKey}");
+        }
+    }
+
     public class ParseResponseAsync
     {
         [Fact]
@@ -41,7 +87,7 @@ public class TlyContextTests
         }
 
         [Fact]
-        internal async Task WhenFlurlResponseNotNull_ShouldParseResponseToModel_ForCreateShortUrlResponse()
+        internal async Task ShouldParseResponseToModel_WhenFlurlResponseNotNull_ForCreateShortUrlResponse()
         {
             var mockResponse = new HttpResponseMessage(HttpStatusCode.OK)
             {
@@ -60,7 +106,7 @@ public class TlyContextTests
         }
 
         [Fact]
-        internal async Task WhenFlurlResponseNotNull_ShouldParseResponseToModel_ForSearchShortUrlResponse()
+        internal async Task ShouldParseResponseToModel_WhenFlurlResponseNotNull_ForSearchShortUrlResponse()
         {
             var mockResponse = new HttpResponseMessage(HttpStatusCode.OK)
             {
