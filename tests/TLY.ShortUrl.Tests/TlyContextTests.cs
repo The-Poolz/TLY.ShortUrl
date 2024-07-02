@@ -4,6 +4,7 @@ using FluentAssertions;
 using Flurl.Http.Testing;
 using System.Globalization;
 using Newtonsoft.Json.Linq;
+using TLY.ShortUrl.Settings;
 using TLY.ShortUrl.Responses;
 using TLY.ShortUrl.Tests.MockResponses;
 
@@ -14,6 +15,58 @@ public class TlyContextTests
     private const string ApiKey = "test_api_key";
     private static readonly TlyContext Context = new(ApiKey);
     private const string TestUrl = "https://api.example.com/test";
+    private static readonly DefaultApiEndpoints DefaultEndpoints = new();
+    private const string LongUrl = "https://www.google.com";
+    private const string Description = "TEST DESCRIPTION #1";
+
+    public class SearchShortUrlAsync
+    {
+        [Fact]
+        internal async Task ShouldSetHeadersAndSendGetRequest_ShouldReturnValidResponse()
+        {
+            using var httpTest = new HttpTest();
+            httpTest.RespondWith(MockSearchShortUrl.Response);
+
+            var response = await Context.SearchShortUrlAsync(Description);
+
+            httpTest.ShouldHaveMadeACall()
+                .WithUrlPattern(DefaultEndpoints.ListShortLinks)
+                .WithHeader("Authorization", $"Bearer {ApiKey}")
+                .WithVerb(HttpMethod.Get);
+
+            response.Should().NotBeNull();
+            response.CurrentPage.Should().Be(1);
+            response.Data.Should().HaveCount(2);
+
+            var firstItem = response.Data.First();
+            AssertsForCreateShortUrlResponse(firstItem);
+
+            var secondItem = response.Data.Last();
+            AssertsForCreateShortUrlResponse(secondItem);
+        }
+    }
+
+    public class CreateShortUrlAsync
+    {
+        [Fact]
+        internal async Task ShouldSetHeadersAndSendPostRequest_ShouldReturnValidResponse()
+        {
+            using var httpTest = new HttpTest();
+            httpTest.RespondWith(MockCreateShortUrl.Response);
+
+            var response = await Context.CreateShortUrlAsync(LongUrl, Description);
+
+            httpTest.ShouldHaveMadeACall()
+                .WithUrlPattern(DefaultEndpoints.CreateShortLink)
+                .WithHeader("Authorization", $"Bearer {ApiKey}")
+                .WithHeader("Content-Type", "application/json")
+                .WithHeader("Accept", "application/json")
+                .WithVerb(HttpMethod.Post)
+                .WithRequestBody("*");
+            
+            AssertsForCreateShortUrlResponse(response);
+        }
+    }
 
     public class GetRequestAsync
     {
@@ -153,19 +206,20 @@ public class TlyContextTests
             var secondItem = result.Data.Last();
             AssertsForCreateShortUrlResponse(secondItem);
         }
+    }
 
-        private static void AssertsForCreateShortUrlResponse(CreateShortUrlResponse objectBeingChecked)
-        {
-            objectBeingChecked.Description.Should().Be("TEST DESCRIPTION #1");
-            objectBeingChecked.LongUrl.Should().Be("https://www.google.com");
-            objectBeingChecked.ShortUrl.Should().Be("https://t.ly/vVRMv");
-            objectBeingChecked.Domain.Should().Be("https://t.ly/");
-            objectBeingChecked.ShortId.Should().Be("vVRMv");
-            objectBeingChecked.ExpireAtDatetime.Should().BeNull();
-            objectBeingChecked.ExpireAtViews.Should().BeNull();
-            objectBeingChecked.PublicStats.Should().BeTrue();
-            objectBeingChecked.CreatedAt.Should().Be(DateTime.Parse("2024-07-01T16:20:27.000000Z", new DateTimeFormatInfo()).ToUniversalTime());
-            objectBeingChecked.UpdatedAt.Should().Be(DateTime.Parse("2024-07-01T16:20:27.000000Z", new DateTimeFormatInfo()).ToUniversalTime());
-        }
+    private static void AssertsForCreateShortUrlResponse(CreateShortUrlResponse objectBeingChecked)
+    {
+        objectBeingChecked.Description.Should().NotBeNull().And.NotBeEmpty();
+        objectBeingChecked.Description.Should().Be("TEST DESCRIPTION #1");
+        objectBeingChecked.LongUrl.Should().Be("https://www.google.com");
+        objectBeingChecked.ShortUrl.Should().Be("https://t.ly/vVRMv");
+        objectBeingChecked.Domain.Should().Be("https://t.ly/");
+        objectBeingChecked.ShortId.Should().Be("vVRMv");
+        objectBeingChecked.ExpireAtDatetime.Should().BeNull();
+        objectBeingChecked.ExpireAtViews.Should().BeNull();
+        objectBeingChecked.PublicStats.Should().BeTrue();
+        objectBeingChecked.CreatedAt.Should().Be(DateTime.Parse("2024-07-01T16:20:27.000000Z", new DateTimeFormatInfo()).ToUniversalTime());
+        objectBeingChecked.UpdatedAt.Should().Be(DateTime.Parse("2024-07-01T16:20:27.000000Z", new DateTimeFormatInfo()).ToUniversalTime());
     }
 }
